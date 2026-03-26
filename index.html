@@ -44,8 +44,7 @@
         }
 
         .cyber-card {
-            background: rgba(8, 12, 8, 0.88);
-            backdrop-filter: blur(3px);
+            background: rgba(8, 12, 8, 0.96);  /* solid dark bg — removed blur */
             border: 1px solid rgba(0, 255, 65, 0.45);
             border-radius: 28px;
             transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -178,10 +177,9 @@
             border-bottom-color: #00ff41 !important;
         }
 
-        /* modal backdrop + perfect centering */
+        /* modal backdrop — solid dark bg, NO blur */
         .modal-bg {
-            backdrop-filter: blur(14px);
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.94);
         }
 
         /* Mobile full-screen modal but still perfectly centered content */
@@ -238,7 +236,8 @@
 </head>
 <body class="relative">
     <div class="relative z-10">
-        <header class="sticky top-0 z-30 backdrop-blur-md bg-black/70 border-b border-green-800/70 p-4 flex flex-wrap justify-between items-center gap-3">
+        <!-- header: replaced backdrop-blur-md with solid bg-black/90 -->
+        <header class="sticky top-0 z-30 bg-black/90 border-b border-green-800/70 p-4 flex flex-wrap justify-between items-center gap-3">
             <div class="flex items-center gap-3">
                 <div class="text-2xl font-bold glitch-badge">HACK<span class="text-green-400">SHOP</span>BD</div>
                 <div class="text-[10px] bg-green-950/80 px-3 py-1 rounded-full border border-green-600/50">v3.0 • CYBER</div>
@@ -264,12 +263,12 @@
         </footer>
     </div>
 
-    <!-- Order Modal - fully responsive + centered -->
+    <!-- Order Modal - solid backdrop, NO blur -->
     <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden flex items-center justify-center p-3 transition-all duration-300">
         <div class="cyber-card w-full max-w-md p-6 md:p-7 transform transition-all animate__animated animate__zoomIn" id="modalCard">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-white flex gap-2"><span>📡</span> অর্ডার কনফার্মেশন</h2>
-                <button onclick="hideOrderForm()" class="text-gray-400 hover:text-red-400 text-2xl leading-5 min-h-[44px] min-w-[44px] flex items-center justify-center">&times;</button>
+                <button type="button" onclick="hideOrderForm()" class="text-gray-400 hover:text-red-400 text-2xl leading-5 min-h-[44px] min-w-[44px] flex items-center justify-center">&times;</button>
             </div>
             <div class="space-y-4">
                 <input type="text" id="custName" placeholder="পূর্ণ নাম" class="w-full rounded-xl">
@@ -280,8 +279,8 @@
                 </div>
             </div>
             <div class="flex gap-4 mt-6">
-                <button onclick="hideOrderForm()" class="flex-1 py-3 border border-red-600 text-red-400 rounded-xl hover:bg-red-950 transition min-h-[44px]">বাতিল</button>
-                <button onclick="submitToTelegram()" id="submitBtn" class="flex-1 py-3 btn-buy rounded-xl font-bold min-h-[44px]">✅ অর্ডার কনফার্ম</button>
+                <button type="button" onclick="hideOrderForm()" class="flex-1 py-3 border border-red-600 text-red-400 rounded-xl hover:bg-red-950 transition min-h-[44px]">বাতিল</button>
+                <button type="button" onclick="submitToTelegram()" id="submitBtn" class="flex-1 py-3 btn-buy rounded-xl font-bold min-h-[44px]">✅ অর্ডার কনফার্ম</button>
             </div>
         </div>
     </div>
@@ -315,9 +314,9 @@
             });
         };
 
-        // product dataset (all images + details)
+        // product dataset (all images + details) — KEPT EXACTLY AS ORIGINAL, NO SHORTENING
         const products = [
-            { name: "Black Hat Special Edition Pro Plus (Rechargeable)", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_092147-800x800.jpg", shortDesc: "পোর্টেবল ওয়াই-ফাই পেন্টেস্টিং টুল, রিচার্জেবল ব্যাটারি সহ।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "MAC Filter Bypass", "Rechargeable Battery"], detailed: "ESP8266 ভিত্তিক, ডিঅথ অ্যাটাক, ইভিল টুইন ফিশিং, ম্যাক ফিল্টার বাইপাস, রিচার্জেবল ব্যাটারি। নেটওয়ার্ক নিরাপত্তা অডিটের জন্য আদর্শ。" },
+            { name: "Black Hat Special Edition Pro Plus (Rechargeable)", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_092147-800x800.jpg", shortDesc: "পোর্টেবল ওয়াই-ফাই পেন্টেস্টিং টুল, রিচার্জেবল ব্যাটারি সহ।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "MAC Filter Bypass", "Rechargeable Battery"], detailed: "ESP8266 ভিত্তিক, ডিঅথ অ্যাটাক, ইভিল টুইন ফিশিং, ম্যাক ফিল্টার বাইপাস, রিচার্জেবল ব্যাটারি। নেটওয়ার্ক নিরাপত্তা অডিটের জন্য আদর্শ।" },
             { name: "Black Hat Special Edition Pro Plus", price: "1599", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_084616-800x800.jpg", shortDesc: "বেসিক মডেল, সবচেয়ে জনপ্রিয় ওয়াই-ফাই জ্যামার।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "MAC Filter Bypass"], detailed: "ইউএসবি পাওয়ার, ইভিল টুইন অ্যাটাক, ডিঅথ। শিক্ষানবিস-মধ্যবর্তী পেন্টেস্টারদের জন্য।" },
             { name: "Black Hat SE Pro Plus with External Antenna", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2025/09/IMG_20260216_115546-800x800.jpg", shortDesc: "বাহ্যিক এন্টেনা সহ উন্নত রেঞ্জ ও সিগন্যাল ক্যাপচার।", features: ["External Antenna", "Extended Range", "Evil Twin", "Deauth Attack"], detailed: "5dBi এন্টেনা, দূরবর্তী নেটওয়ার্কে আক্রমণ, অ্যাডভান্সড পেন্টেস্টিং ল্যাবের জন্য।" },
             { name: "Dual-Band RTL8720DN WiFi Deauther (5GHz & 2.4GHz)", price: "1999", image: "https://hackshopbd.com/wp-content/uploads/2024/11/20251130_153044-800x800.jpg", shortDesc: "ডুয়াল-ব্যান্ড (5GHz/2.4GHz) ওয়াই-ফাই জ্যামার ও পেন্টেস্টিং ডিভাইস।", features: ["5GHz & 2.4GHz Support", "Deauther", "Jamming", "Advanced Packet Injection"], detailed: "RTL8720DN চিপ, 5GHz সাপোর্ট, প্যাকেট ইনজেকশন। আধুনিক রাউটার নিরাপত্তা পরীক্ষার জন্য।" },
@@ -413,21 +412,23 @@
                             ${p.detailed}
                         </div>
                         <div class="flex justify-between items-center mt-4 gap-3">
-                            <button onclick="toggleDetail(${idx}, this)" class="toggle-details text-green-400 hover:text-green-300 text-xs font-bold transition min-h-[44px] px-4">📖 বিস্তারিত দেখুন</button>
-                            <button onclick="showOrderForm('${p.name.replace(/'/g, "\\'")}', '${p.price}')" class="btn-buy px-5 py-2 text-sm font-bold tracking-wider shadow-md pulse-glow">🛒 অর্ডার করুন</button>
+                            <button type="button" onclick="toggleDetail(${idx}, this)" class="toggle-details text-green-400 hover:text-green-300 text-xs font-bold transition min-h-[44px] px-4">📖 বিস্তারিত দেখুন</button>
+                            <button type="button" onclick="showOrderForm('${p.name.replace(/'/g, "\\'")}', '${p.price}')" class="btn-buy px-5 py-2 text-sm font-bold tracking-wider shadow-md pulse-glow">🛒 অর্ডার করুন</button>
                         </div>
                     </div>
-                    <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/40 font-mono">৳ ${p.price}</div>
+                    <div class="absolute top-3 right-3 bg-black/80 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/40 font-mono">৳ ${p.price}</div>
                 </div>
             `).join('');
             attachSkeletonRemoval();
             observeCards();
         }
 
-        // show order modal
+        // show order modal with body scroll lock
         function showOrderForm(productName, productPrice) {
             selectedProduct = { name: productName, price: productPrice };
             document.getElementById('orderModal').classList.remove('hidden');
+            // Prevent background scrolling while modal is open
+            document.body.style.overflow = 'hidden';
         }
         
         function hideOrderForm() {
@@ -435,6 +436,8 @@
             document.getElementById('custName').value = '';
             document.getElementById('custPhone').value = '';
             document.getElementById('custAddr').value = '';
+            // Restore background scrolling
+            document.body.style.overflow = '';
         }
 
         function generateOrderMetadata() {
