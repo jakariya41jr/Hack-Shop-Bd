@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>HACKSHOPBD | CYBERPUNK TERMINAL</title>
-    <!-- Tailwind + Animate.css + SweetAlert2 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700;500&display=swap" rel="stylesheet">
@@ -18,13 +17,14 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0f0a, #030503);
+            background: #050805;
+            background: radial-gradient(circle at 50% 50%, #0a0f0a, #030503);
             font-family: 'Space Mono', 'Courier New', monospace;
             color: #b3ffcf;
             position: relative;
         }
 
-        /* neon grid overlay */
+        /* neon grid overlay - low opacity to save GPU */
         body::before {
             content: "";
             position: fixed;
@@ -32,57 +32,54 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 65, 0.04) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
             background-size: 32px 32px;
             pointer-events: none;
             z-index: 0;
         }
 
         .glow-text {
-            text-shadow: 0 0 5px #00ff41, 0 0 10px #00cc33;
+            text-shadow: 0 0 5px #00ff41;
         }
 
         .cyber-card {
-            background: rgba(8, 12, 8, 0.96);  /* solid dark bg — removed blur */
-            border: 1px solid rgba(0, 255, 65, 0.45);
-            border-radius: 28px;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            transform: translateY(24px);
+            background: rgba(10, 15, 10, 0.98); /* Solid background to avoid blur crash */
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 24px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
-        .cyber-card.animate-in {
+        /* simple fade-in to prevent layout shift */
+        .product-card {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.55s ease, transform 0.5s cubic-bezier(0.2, 0.85, 0.4, 1);
         }
 
-        .cyber-card:hover {
-            transform: translateY(-6px);
+        /* Mobile specific active state instead of hover */
+        .cyber-card:active {
             border-color: #00ff41;
-            box-shadow: 0 16px 32px rgba(0, 255, 65, 0.2);
+            transform: scale(0.98);
         }
 
-        /* skeleton loader for images (prevents CLS + smooth appearance) */
         .img-container {
             position: relative;
             width: 100%;
-            height: 13rem;
+            height: 12rem;
             background: #0a120a;
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            border: 1px solid rgba(0, 255, 65, 0.1);
         }
 
         .img-container.skeleton {
-            background: linear-gradient(90deg, #142014, #1f2a1f, #142014);
+            background: linear-gradient(90deg, #0d1a0d, #1a2a1a, #0d1a0d);
             background-size: 200% 100%;
-            animation: shimmerMove 1.4s infinite ease-in-out;
+            animation: shimmer 1.5s infinite;
         }
 
-        @keyframes shimmerMove {
+        @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
@@ -92,195 +89,92 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: opacity 0.25s;
         }
 
-        .feature-list {
-            scrollbar-width: thin;
-            scrollbar-color: #00ff41 #1a2a1a;
-        }
-
-        .feature-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .feature-list::-webkit-scrollbar-track {
-            background: #1a2a1a;
-            border-radius: 10px;
-        }
-
-        .feature-list::-webkit-scrollbar-thumb {
-            background: #00ff41;
-            border-radius: 10px;
-        }
-
-        /* interactive elements: thumb-friendly min 44px */
-        .btn-buy, .toggle-details, .modal-close-btn, .modal-cancel-btn, .modal-confirm-btn,
-        input, textarea, button, [onclick] {
-            min-height: 44px;
+        /* touch-friendly buttons */
+        .btn-buy, .toggle-details, button {
+            min-height: 48px;
             touch-action: manipulation;
         }
 
         .btn-buy {
-            background: linear-gradient(105deg, #00cc33, #00ff41);
+            background: #00cc33;
             color: black;
             font-weight: bold;
             border: none;
-            transition: 0.2s;
-            display: inline-flex;
+            border-radius: 50px;
+            padding: 0 20px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            border-radius: 60px;
-            padding: 0 1.2rem;
+            gap: 8px;
         }
 
         .btn-buy:active {
-            transform: scale(0.96);
-            box-shadow: 0 0 16px #00ff41;
-        }
-
-        .pulse-glow {
-            animation: pulseNeon 1.8s infinite;
-        }
-
-        @keyframes pulseNeon {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.5); }
-            70% { box-shadow: 0 0 0 8px rgba(0, 255, 65, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
+            background: #00ff41;
+            box-shadow: 0 0 15px #00ff41;
         }
 
         input, textarea {
             background: #0a0f0a !important;
             border: 1.5px solid #2a4a2a !important;
             color: #d0ffd0 !important;
-            font-family: 'Space Mono', monospace;
-            transition: 0.2s;
-            border-radius: 16px;
-            padding: 10px 14px;
+            border-radius: 12px;
+            padding: 12px;
         }
 
-        input:focus, textarea:focus {
+        input:focus {
             border-color: #00ff41 !important;
-            box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
             outline: none;
         }
 
-        .search-input {
-            background: #030503 !important;
-            border-bottom: 2px solid #2a5a2a !important;
-            border-radius: 60px;
-            padding: 10px 18px;
-        }
-
-        .search-input:focus {
-            border-bottom-color: #00ff41 !important;
-        }
-
-        /* modal backdrop — solid dark bg, NO blur */
         .modal-bg {
-            background: rgba(0, 0, 0, 0.94);
+            background: rgba(0, 0, 0, 0.96); /* No blur for stability */
         }
 
-        /* Mobile full-screen modal but still perfectly centered content */
         @media (max-width: 640px) {
-            .modal-card-full {
-                width: 92% !important;
-                max-width: 92% !important;
-                border-radius: 32px !important;
-                margin: 0 auto !important;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-            .product-grid {
-                gap: 1.2rem;
-            }
-        }
-
-        .toggle-details {
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-            background: transparent;
-            border: 1px solid #2a5a2a;
-            border-radius: 40px;
-            padding: 0 14px;
-            transition: 0.2s;
-        }
-
-        .toggle-details:active {
-            background: #1a3a1a;
-        }
-
-        .glitch-badge {
-            animation: glitchPulse 1.8s infinite;
-        }
-
-        @keyframes glitchPulse {
-            0% { opacity: 0.7; text-shadow: 0 0 0 #00ff41; }
-            50% { opacity: 1; text-shadow: 0 0 6px #00ff41; }
-            100% { opacity: 0.7; text-shadow: 0 0 0 #00ff41; }
-        }
-
-        /* custom neon sweetalert icons */
-        .neon-icon-success {
-            font-size: 4rem;
-            filter: drop-shadow(0 0 12px #00ff41);
-            display: inline-block;
-        }
-        .neon-icon-error {
-            font-size: 4rem;
-            filter: drop-shadow(0 0 12px #ff3366);
-            display: inline-block;
+            .product-grid { gap: 1rem; }
+            .cyber-card { padding: 1rem !important; }
         }
     </style>
 </head>
-<body class="relative">
+<body>
     <div class="relative z-10">
-        <!-- header: replaced backdrop-blur-md with solid bg-black/90 -->
-        <header class="sticky top-0 z-30 bg-black/90 border-b border-green-800/70 p-4 flex flex-wrap justify-between items-center gap-3">
+        <header class="sticky top-0 z-30 bg-black/95 border-b border-green-900/50 p-4 flex flex-wrap justify-between items-center gap-3">
             <div class="flex items-center gap-3">
-                <div class="text-2xl font-bold glitch-badge">HACK<span class="text-green-400">SHOP</span>BD</div>
-                <div class="text-[10px] bg-green-950/80 px-3 py-1 rounded-full border border-green-600/50">v3.0 • CYBER</div>
+                <div class="text-xl font-bold tracking-tighter text-white">HACK<span class="text-green-400">SHOP</span>BD</div>
+                <div class="text-[9px] bg-green-950 px-2 py-0.5 rounded border border-green-600/40">v3.0 • MOBILE</div>
             </div>
-            <div class="flex gap-3 items-center">
-                <input type="text" id="searchInput" placeholder="🔍 অনুসন্ধান (পণ্য/বৈশিষ্ট্য)" class="search-input px-5 py-2 rounded-full text-sm w-64 bg-black/60 text-green-200">
-                <span class="text-xs bg-green-900/60 px-2 py-1 rounded-md animate-pulse border border-green-500/30">⚡ LIVE</span>
+            <div class="flex gap-2 items-center flex-grow sm:flex-grow-0">
+                <input type="text" id="searchInput" placeholder="🔍 পণ্য খুঁজুন..." class="px-4 py-2 rounded-full text-xs w-full sm:w-48 bg-black/60">
             </div>
         </header>
 
-        <main class="p-5 md:p-8 max-w-7xl mx-auto">
+        <main class="p-4 md:p-8 max-w-7xl mx-auto">
             <div class="mb-8 text-center">
-                <p class="text-green-400/80 text-sm tracking-wider">━━━━━━ CYBER PENTEST GEAR & TRAINING ━━━━━━</p>
-                <h2 class="text-3xl md:text-4xl font-bold mt-2 glow-text">আমাদের সংগ্রহ</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto text-sm mt-2">প্রিমিয়াম হ্যাকিং গ্যাজেট, পেন্টেস্টিং কোর্স — শুধুমাত্র আইনসম্মত ব্যবহারের জন্য</p>
+                <h2 class="text-2xl font-bold glow-text">আমাদের কালেকশন</h2>
+                <p class="text-gray-500 text-xs mt-1">সবচেয়ে সেরা পেন্টেস্টিং গ্যাজেটগুলো এখন এক জায়গায়</p>
             </div>
 
-            <div class="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid"></div>
+            <div class="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid">
+                </div>
         </main>
-
-        <footer class="border-t border-green-900/50 text-center text-gray-500 text-xs py-6 mt-8">
-            <p>© 2025 HACKSHOPBD | সাইবার নিরাপত্তা শিক্ষা ও টুলস | দায়িত্বশীল ব্যবহার নিশ্চিত করুন</p>
-        </footer>
     </div>
 
-    <!-- Order Modal - solid backdrop, NO blur -->
-    <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden flex items-center justify-center p-3 transition-all duration-300">
-        <div class="cyber-card w-full max-w-md p-6 md:p-7 transform transition-all animate__animated animate__zoomIn" id="modalCard">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-white flex gap-2"><span>📡</span> অর্ডার কনফার্মেশন</h2>
-                <button type="button" onclick="hideOrderForm()" class="text-gray-400 hover:text-red-400 text-2xl leading-5 min-h-[44px] min-w-[44px] flex items-center justify-center">&times;</button>
+    <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden flex items-center justify-center p-4">
+        <div class="cyber-card w-full max-w-md p-6 animate__animated animate__zoomIn">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg font-bold text-white">📦 অর্ডার কনফার্ম করুন</h2>
+                <button type="button" onclick="hideOrderForm()" class="text-gray-400 text-3xl">&times;</button>
             </div>
             <div class="space-y-4">
-                <input type="text" id="custName" placeholder="পূর্ণ নাম" class="w-full rounded-xl">
-                <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর (01XXXXXXXXX)" class="w-full rounded-xl">
-                <textarea id="custAddr" placeholder="ডেলিভারি ঠিকানা (জেলা, থানা, বিস্তারিত)" class="w-full rounded-xl h-28"></textarea>
-                <div class="text-xs text-green-500/70 bg-black/40 p-2 rounded-xl border border-green-800/40">
-                    ⚡ অর্ডার জমা দিলে টেলিগ্রামে নোটিফিকেশন যাবে। প্রতিনিধি যোগাযোগ করবেন।
-                </div>
+                <input type="text" id="custName" placeholder="আপনার নাম" class="w-full">
+                <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" class="w-full">
+                <textarea id="custAddr" placeholder="পুরো ঠিকানা (থানা, জেলা)" class="w-full h-24"></textarea>
             </div>
-            <div class="flex gap-4 mt-6">
-                <button type="button" onclick="hideOrderForm()" class="flex-1 py-3 border border-red-600 text-red-400 rounded-xl hover:bg-red-950 transition min-h-[44px]">বাতিল</button>
-                <button type="button" onclick="submitToTelegram()" id="submitBtn" class="flex-1 py-3 btn-buy rounded-xl font-bold min-h-[44px]">✅ অর্ডার কনফার্ম</button>
+            <div class="flex gap-3 mt-6">
+                <button type="button" onclick="hideOrderForm()" class="flex-1 border border-red-900 text-red-500 rounded-xl">বাতিল</button>
+                <button type="button" onclick="submitToTelegram()" id="submitBtn" class="flex-1 btn-buy">অর্ডার কনফার্ম</button>
             </div>
         </div>
     </div>
@@ -290,161 +184,59 @@
         const chatId = "5291745953";
         let selectedProduct = { name: "", price: "" };
 
-        // ======================== CUSTOM NEON SWEETALERT2 ========================
-        const showNeonAlert = (type, title, message) => {
-            const isSuccess = type === 'success';
-            const iconHtml = isSuccess 
-                ? '<div class="neon-icon-success">⚡✓⚡</div>' 
-                : '<div class="neon-icon-error">⚠️⛔⚠️</div>';
-            Swal.fire({
-                title: title,
-                html: `<div style="color:#b3ffcf; font-family: monospace;">${message}</div>`,
-                icon: undefined,
-                iconHtml: iconHtml,
-                background: '#0a0f0a',
-                color: '#00ff41',
-                confirmButtonColor: '#00cc33',
-                confirmButtonText: isSuccess ? '⛓️ এগিয়ে যান' : '🚫 পুনরায় চেষ্টা',
-                customClass: {
-                    popup: 'border-2 border-green-500 rounded-3xl shadow-2xl',
-                    confirmButton: 'bg-green-700 hover:bg-green-600 text-black font-bold py-2 px-6 rounded-full'
-                },
-                backdrop: `rgba(0,0,0,0.88)`,
-                showClass: { popup: 'animate__animated animate__fadeInDown' }
-            });
-        };
-
-        // product dataset (all images + details) — KEPT EXACTLY AS ORIGINAL, NO SHORTENING
+        // Full Product Data (16 Items Kept)
         const products = [
-            { name: "Black Hat Special Edition Pro Plus (Rechargeable)", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_092147-800x800.jpg", shortDesc: "পোর্টেবল ওয়াই-ফাই পেন্টেস্টিং টুল, রিচার্জেবল ব্যাটারি সহ।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "MAC Filter Bypass", "Rechargeable Battery"], detailed: "ESP8266 ভিত্তিক, ডিঅথ অ্যাটাক, ইভিল টুইন ফিশিং, ম্যাক ফিল্টার বাইপাস, রিচার্জেবল ব্যাটারি। নেটওয়ার্ক নিরাপত্তা অডিটের জন্য আদর্শ।" },
-            { name: "Black Hat Special Edition Pro Plus", price: "1599", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_084616-800x800.jpg", shortDesc: "বেসিক মডেল, সবচেয়ে জনপ্রিয় ওয়াই-ফাই জ্যামার।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "MAC Filter Bypass"], detailed: "ইউএসবি পাওয়ার, ইভিল টুইন অ্যাটাক, ডিঅথ। শিক্ষানবিস-মধ্যবর্তী পেন্টেস্টারদের জন্য।" },
-            { name: "Black Hat SE Pro Plus with External Antenna", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2025/09/IMG_20260216_115546-800x800.jpg", shortDesc: "বাহ্যিক এন্টেনা সহ উন্নত রেঞ্জ ও সিগন্যাল ক্যাপচার।", features: ["External Antenna", "Extended Range", "Evil Twin", "Deauth Attack"], detailed: "5dBi এন্টেনা, দূরবর্তী নেটওয়ার্কে আক্রমণ, অ্যাডভান্সড পেন্টেস্টিং ল্যাবের জন্য।" },
-            { name: "Dual-Band RTL8720DN WiFi Deauther (5GHz & 2.4GHz)", price: "1999", image: "https://hackshopbd.com/wp-content/uploads/2024/11/20251130_153044-800x800.jpg", shortDesc: "ডুয়াল-ব্যান্ড (5GHz/2.4GHz) ওয়াই-ফাই জ্যামার ও পেন্টেস্টিং ডিভাইস।", features: ["5GHz & 2.4GHz Support", "Deauther", "Jamming", "Advanced Packet Injection"], detailed: "RTL8720DN চিপ, 5GHz সাপোর্ট, প্যাকেট ইনজেকশন। আধুনিক রাউটার নিরাপত্তা পরীক্ষার জন্য।" },
-            { name: "Black Hat SE Pro Plus (5GHz RTL8720DN)", price: "2899", image: "https://hackshopbd.com/wp-content/uploads/2024/12/20250320_170611-800x800.jpg", shortDesc: "5GHz সাপোর্ট সহ প্রিমিয়াম হ্যাকিং গ্যাজেট।", features: ["Dual-Band (5GHz/2.4GHz)", "RTL8720DN Chip", "Advanced Penetration Testing"], detailed: "প্রিমিয়াম মডেল, রিচার্জেবল, 5GHz সাপোর্ট, কাস্টম ফার্মওয়্যার। পেশাদার পেন্টেস্টারদের জন্য।" },
-            { name: "ESP32 Wireless Analyzer (Wi-Fi/Bluetooth)", price: "2999", image: "https://hackshopbd.com/wp-content/uploads/2024/09/20251231_172855-800x800.jpg", shortDesc: "Wi-Fi ও Bluetooth উভয় নেটওয়ার্কে পেন্টেস্টিং করতে পারে।", features: ["Wi-Fi Deauth", "Bluetooth Jamming", "Rechargeable Battery", "External Antenna"], detailed: "ESP32, ব্লুটুথ ডিঅথ, জ্যামিং, IoT ডিভাইস নিরাপত্তা পরীক্ষার জন্য অত্যন্ত কার্যকর।" },
-            { name: "ESP32 Wireless Analyzer with Triple Antenna", price: "3299", image: "https://hackshopbd.com/wp-content/uploads/2024/09/20260104_170951-800x800.jpg", shortDesc: "ট্রিপল এক্সটার্নাল এন্টেনা সহ আরও শক্তিশালী সংস্করণ।", features: ["Triple Antenna", "Extended Range", "Wi-Fi/Bluetooth Attacks"], detailed: "তিনটি এন্টেনা, দূর-পরিসরে আক্রমণ, পেশাদার ল্যাব এবং রিমোট টেস্টিংয়ের জন্য।" },
-            { name: "BW16 RTL8720DN Dual-Band WiFi Jammer Module", price: "1799", image: "https://hackshopbd.com/wp-content/uploads/2025/02/20251130_162834-800x800.jpg", shortDesc: "ডুয়াল-ব্যান্ড জ্যামার মডিউল, উন্নত ফার্মওয়্যার সহ।", features: ["RTL8720DN Chip", "5GHz Support", "Compact Design", "Custom Firmware"], detailed: "মডিউল আকারে, নিজস্ব প্রকল্পের জন্য। শিক্ষার্থী ও ডেভেলপারদের জন্য চমৎকার।" },
-            { name: "ESP32 Multi WiFi Cracking Gadgets", price: "999", image: "https://hackshopbd.com/wp-content/uploads/2022/07/IMG_20240710_002409-800x800.jpg", shortDesc: "বেসিক ওয়াই-ফাই ক্র্যাকিং এবং পেন্টেস্টিং টুল।", features: ["WPA/WPA2 Cracking", "Handshake Capture", "Evil Twin"], detailed: "হ্যান্ডশেক ক্যাপচার, WPA/WPA2 ক্র্যাকিং, শিক্ষানবিসদের জন্য উপযুক্ত।" },
-            { name: "NodeMcu ESP8266 WiFi Jammer (Full Programmed)", price: "799", image: "https://hackshopbd.com/wp-content/uploads/2017/12/20240321_124927-800x800.jpg", shortDesc: "এন্ট্রি-লেভেল ওয়াই-ফাই জ্যামার, প্রোগ্রাম করা থাকে।", features: ["Deauther", "Jammer", "Simple UI", "Plug & Play"], detailed: "NodeMCU, ওয়েব ইন্টারফেস, ডিঅথ অ্যাটাক, জ্যামিং। প্রশিক্ষণের জন্য জনপ্রিয়।" },
-            { name: "USB Rubber Ducky with Course", price: "799", image: "https://hackshopbd.com/wp-content/uploads/2017/12/5-1-1024x1024.jpg", shortDesc: "হ্যাকিং টুলসের জনপ্রিয় USB রাবার ডাকি, সাথে কোর্স।", features: ["Keystroke Injection", "Payload Scripting", "Course Included"], detailed: "কীবোর্ড এমুলেটর, পেলোড তৈরির কোর্স সহ। ফিজিক্যাল পেন্টেস্টিং ও অটোমেশনের জন্য।" },
-            { name: "Self Defense high Voltage Gadget", price: "1199", image: "https://hackshopbd.com/wp-content/uploads/2025/01/20250116_131100-800x800.jpg", shortDesc: "হাই ভোল্টেজ স্টান গান, ব্যক্তিগত নিরাপত্তার জন্য।", features: ["400kV Output", "Rechargeable", "Compact Size"], detailed: "হাই-ভোল্টেজ আত্মরক্ষামূলক ডিভাইস, রিচার্জেবল, বহনযোগ্য।" },
-            { name: "Android WiFi Penetration Testing Course", price: "699", image: "https://hackshopbd.com/wp-content/uploads/2022/04/Android-WiFi-Penetration-Testing-And-Ethical-Hacking-Course-800x800.jpg", shortDesc: "অ্যান্ড্রয়েড ডিভাইস দিয়ে ওয়াই-ফাই পেন্টেস্টিং শেখার কোর্স।", features: ["Video Tutorials", "Non-Root Methods", "Real-World Attacks"], detailed: "রুট ছাড়াই অ্যান্ড্রয়েডে ওয়াই-ফাই হ্যাকিং, ইভিল টুইন, ডিঅথ অ্যাটাক সহ ভিডিও টিউটোরিয়াল।" },
-            { name: "Advanced Wi-Fi Penetration Testing Course (Computer)", price: "699", image: "https://hackshopbd.com/wp-content/uploads/2024/06/Advanced-Wi-Fi-Penetration-Testing-And-Ethical-Hacking-Course-For-Computer-800x800.jpg", shortDesc: "কম্পিউটারে ওয়াই-ফাই হ্যাকিং ও সুরক্ষা কোর্স।", features: ["Kali Linux", "Aircrack-ng", "WPS Cracking", "Evil Twin"], detailed: "Kali Linux ব্যবহার করে পূর্ণাঙ্গ ওয়াই-ফাই পেন্টেস্টিং কোর্স, লাইভ ল্যাবসহ।" },
-            { name: "Professional Facebook Security Course", price: "699", image: "https://placehold.co/400x400/111111/00ff41?text=Facebook+Security+Course", shortDesc: "ফেসবুক অ্যাকাউন্ট সুরক্ষা ও ইথিক্যাল হ্যাকিং টেকনিক।", features: ["Phishing Protection", "Account Recovery", "Social Engineering"], detailed: "ফেসবুক নিরাপত্তা, ফিশিং থেকে বাঁচার উপায়, সোশ্যাল ইঞ্জিনিয়ারিং, অ্যাকাউন্ট রিকভারি।" },
-            { name: "USB Rubber Ducky Course", price: "599", image: "https://placehold.co/400x400/111111/00ff41?text=Rubber+Ducky+Course", shortDesc: "USB Rubber Ducky ডিভাইস ব্যবহার করে হ্যাকিং শেখার কোর্স।", features: ["Scripting", "Payload Development", "Hands-on Projects"], detailed: "শুধুমাত্র Rubber Ducky ব্যবহার, পেলোড ডেভেলপমেন্ট, বিভিন্ন OS-এ কমান্ড ইনজেকশন।" }
+            { name: "Black Hat Special Edition Pro Plus (Rechargeable)", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_092147-800x800.jpg", shortDesc: "পোর্টেবল ওয়াই-ফাই পেন্টেস্টিং টুল, রিচার্জেবল ব্যাটারি সহ।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "Hidden SSID Detection", "Rechargeable Battery"], detailed: "ESP8266 ভিত্তিক, ডিঅথ অ্যাটাক, ইভিল টুইন ফিশিং, ম্যাক ফিল্টার বাইপাস, রিচার্জেবল ব্যাটারি।" },
+            { name: "Black Hat Special Edition Pro Plus", price: "1599", image: "https://hackshopbd.com/wp-content/uploads/2024/09/IMG_20260216_084616-800x800.jpg", shortDesc: "বেসিক মডেল, সবচেয়ে জনপ্রিয় ওয়াই-ফাই জ্যামার।", features: ["Wi-Fi Deauth", "Evil Twin Attack", "MAC Filter Bypass"], detailed: "ইউএসবি পাওয়ার, ইভিল টুইন অ্যাটাক, ডিঅথ। শিক্ষানবিসদের জন্য।" },
+            { name: "Black Hat SE Pro Plus with External Antenna", price: "1899", image: "https://hackshopbd.com/wp-content/uploads/2025/09/IMG_20260216_115546-800x800.jpg", shortDesc: "বাহ্যিক এন্টেনা সহ উন্নত রেঞ্জ ও সিগন্যাল ক্যাপচার।", features: ["External Antenna", "Extended Range", "Deauth Attack"], detailed: "5dBi এন্টেনা, দূরবর্তী নেটওয়ার্কে আক্রমণ করার জন্য আদর্শ।" },
+            { name: "Dual-Band RTL8720DN WiFi Deauther (5GHz & 2.4GHz)", price: "1999", image: "https://hackshopbd.com/wp-content/uploads/2024/11/20251130_153044-800x800.jpg", shortDesc: "ডুয়াল-ব্যান্ড ওয়াই-ফাই জ্যামার ও পেন্টেস্টিং ডিভাইস।", features: ["5GHz Support", "Packet Injection", "Dual Band"], detailed: "RTL8720DN চিপ, আধুনিক রাউটার নিরাপত্তা পরীক্ষার জন্য।" },
+            { name: "Black Hat SE Pro Plus (5GHz RTL8720DN)", price: "2899", image: "https://hackshopbd.com/wp-content/uploads/2024/12/20250320_170611-800x800.jpg", shortDesc: "5GHz সাপোর্ট সহ প্রিমিয়াম হ্যাকিং গ্যাজেট।", features: ["Dual-Band (5GHz/2.4GHz)", "Custom Firmware", "Premium Build"], detailed: "পেশাদার পেন্টেস্টারদের জন্য কাস্টম ফার্মওয়্যার লোডেড।" },
+            { name: "ESP32 Wireless Analyzer (Wi-Fi/Bluetooth)", price: "2999", image: "https://hackshopbd.com/wp-content/uploads/2024/09/20251231_172855-800x800.jpg", shortDesc: "Wi-Fi ও Bluetooth উভয় নেটওয়ার্কে পেন্টেস্টিং।", features: ["Bluetooth Jamming", "Rechargeable", "Dual Core"], detailed: "ESP32 চিপসেট, ব্লুটুথ ডিঅথ এবং জ্যামিং সাপোর্ট।" },
+            { name: "ESP32 Wireless Analyzer with Triple Antenna", price: "3299", image: "https://hackshopbd.com/wp-content/uploads/2024/09/20260104_170951-800x800.jpg", shortDesc: "ট্রিপল এক্সটার্নাল এন্টেনা সহ শক্তিশালী সংস্করণ।", features: ["Triple Antenna", "Extended Range", "Wi-Fi/BT"], detailed: "তিনটি এন্টেনা, রিমোট টেস্টিংয়ের জন্য সর্বোচ্চ রেঞ্জ।" },
+            { name: "BW16 RTL8720DN Dual-Band WiFi Jammer Module", price: "1799", image: "https://hackshopbd.com/wp-content/uploads/2025/02/20251130_162834-800x800.jpg", shortDesc: "ডুয়াল-ব্যান্ড জ্যামার মডিউল, উন্নত ফার্মওয়্যার।", features: ["RTL8720DN", "Compact", "DIY Friendly"], detailed: "নিজস্ব প্রোজেক্ট তৈরির জন্য সেরা ডুয়াল ব্যান্ড মডিউল।" },
+            { name: "ESP32 Multi WiFi Cracking Gadgets", price: "999", image: "https://hackshopbd.com/wp-content/uploads/2022/07/IMG_20240710_002409-800x800.jpg", shortDesc: "বেসিক ওয়াই-ফাই ক্র্যাকিং এবং পেন্টেস্টিং টুল।", features: ["Handshake Capture", "WPA/WPA2 Support"], detailed: "সহজেই হ্যান্ডশেক ক্যাপচার করার জন্য ছোট পকেট ডিভাইস।" },
+            { name: "NodeMcu ESP8266 WiFi Jammer (Full Programmed)", price: "799", image: "https://hackshopbd.com/wp-content/uploads/2017/12/20240321_124927-800x800.jpg", shortDesc: "এন্ট্রি-লেভেল ওয়াই-ফাই জ্যামার, প্লাগ এন্ড প্লে।", features: ["Deauther", "Web Interface", "Easy to use"], detailed: "NodeMCU ভিত্তিক সবচেয়ে সাশ্রয়ী পেন্টেস্টিং ডিভাইস।" },
+            { name: "USB Rubber Ducky with Course", price: "799", image: "https://hackshopbd.com/wp-content/uploads/2017/12/5-1-1024x1024.jpg", shortDesc: "পেলোড ইনজেকশনের জন্য সেরা টুল, সাথে কোর্স।", features: ["Keystroke Injection", "Scripting", "Bonus Course"], detailed: "ফিজিক্যাল পেন্টেস্টিংয়ের জন্য কীবোর্ড এমুলেটর টুল।" },
+            { name: "Self Defense high Voltage Gadget", price: "1199", image: "https://hackshopbd.com/wp-content/uploads/2025/01/20250116_131100-800x800.jpg", shortDesc: "ব্যক্তিগত নিরাপত্তার জন্য হাই ভোল্টেজ স্টান গান।", features: ["High Voltage", "Rechargeable", "Compact"], detailed: "আত্মরক্ষার জন্য শক্তিশালী ইলেকট্রিক শক ডিভাইস।" },
+            { name: "Android WiFi Penetration Testing Course", price: "699", image: "https://hackshopbd.com/wp-content/uploads/2022/04/Android-WiFi-Penetration-Testing-And-Ethical-Hacking-Course-800x800.jpg", shortDesc: "অ্যান্ড্রয়েড ফোন দিয়ে হ্যাকিং শেখার কোর্স।", features: ["Video Tutorials", "No-Root Methods"], detailed: "মোবাইল ব্যবহার করে ওয়াই-ফাই হ্যাকিংয়ের পূর্ণাঙ্গ কোর্স।" },
+            { name: "Advanced Wi-Fi Penetration Testing Course (Computer)", price: "699", image: "https://hackshopbd.com/wp-content/uploads/2024/06/Advanced-Wi-Fi-Penetration-Testing-And-Ethical-Hacking-Course-For-Computer-800x800.jpg", shortDesc: "কম্পিউটারে ওয়াই-ফাই সুরক্ষা পরীক্ষা করার কোর্স।", features: ["Kali Linux", "Professional Lab"], detailed: "কালি লিনাক্স ব্যবহার করে এডভান্সড নেটওয়ার্ক হ্যাকিং।" },
+            { name: "Professional Facebook Security Course", price: "699", image: "https://hackshopbd.com/wp-content/uploads/2022/04/Facebook-Account-Security-And-Ethical-Hacking-Course-800x800.jpg", shortDesc: "অ্যাকাউন্ট সুরক্ষা ও ইথিক্যাল হ্যাকিং কোর্স।", features: ["Security", "Social Engineering"], detailed: "ফেসবুক প্রোফাইল সুরক্ষিত রাখার সব সিক্রেট টেকনিক।" },
+            { name: "USB Rubber Ducky Course", price: "599", image: "https://hackshopbd.com/wp-content/uploads/2017/12/USB-Rubber-Ducky-Pentesting-Course-800x800.jpg", shortDesc: "পেলোড ডেভেলপমেন্ট শেখার স্পেশাল কোর্স।", features: ["Payload Writing", "Automation"], detailed: "রাবার ডাকি দিয়ে অটোমেশন হ্যাকিং শেখার জন্য সেরা।" }
         ];
 
-        let currentFilter = "";
-        
-        // Skeleton loader removal after image loads (eliminates CLS + smooth)
-        function attachSkeletonRemoval() {
-            const containers = document.querySelectorAll('.img-container');
-            containers.forEach(container => {
-                const img = container.querySelector('img');
-                if (!img) return;
-                if (img.complete && img.naturalWidth !== 0) {
-                    container.classList.remove('skeleton');
-                } else {
-                    img.addEventListener('load', () => {
-                        container.classList.remove('skeleton');
-                    });
-                    img.addEventListener('error', () => {
-                        container.classList.remove('skeleton');
-                    });
-                }
-            });
-        }
-
-        // Intersection Observer for scroll-based fade-in
-        let productObserver = null;
-        function observeCards() {
-            if (productObserver) productObserver.disconnect();
-            const cards = document.querySelectorAll('.product-card');
-            productObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-in');
-                        productObserver.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
-            cards.forEach(card => productObserver.observe(card));
-        }
-
-        function toggleDetail(idx, btnElement) {
-            const detailDiv = document.getElementById(`detail-${idx}`);
-            if (!detailDiv) return;
-            if (detailDiv.classList.contains('hidden')) {
-                detailDiv.classList.remove('hidden');
-                if (btnElement) btnElement.innerText = '📘 সংক্ষেপ দেখুন';
-            } else {
-                detailDiv.classList.add('hidden');
-                if (btnElement) btnElement.innerText = '📖 বিস্তারিত দেখুন';
-            }
-        }
-
-        function renderProducts() {
-            const container = document.getElementById('productGrid');
-            const filtered = currentFilter === "" ? products : products.filter(p => 
-                p.name.toLowerCase().includes(currentFilter.toLowerCase()) || 
-                p.features.some(f => f.toLowerCase().includes(currentFilter.toLowerCase())) ||
-                p.shortDesc.toLowerCase().includes(currentFilter.toLowerCase())
-            );
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">🔍 কোন পণ্য খুঁজে পাওয়া যায়নি।</div>`;
-                return;
-            }
-            container.innerHTML = filtered.map((p, idx) => `
-                <div class="cyber-card p-5 transition-all product-card" data-idx="${idx}">
-                    <div class="img-container skeleton h-52 w-full rounded-2xl border border-green-800/60 bg-black/40">
-                        <img src="${p.image}" alt="${p.name.replace(/['"]/g, '&quot;')}" loading="lazy" class="rounded-2xl">
+        function renderProducts(filter = "") {
+            const grid = document.getElementById('productGrid');
+            const items = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            
+            grid.innerHTML = items.map((p, i) => `
+                <div class="cyber-card p-5 product-card">
+                    <div class="img-container skeleton">
+                        <img src="${p.image}" alt="${p.name}" loading="lazy" onload="this.parentElement.classList.remove('skeleton')">
                     </div>
                     <div class="mt-4">
-                        <h3 class="text-xl font-bold text-white leading-tight">${p.name}</h3>
-                        <p class="text-sm text-green-300/80 mt-1 border-l-2 border-green-500 pl-2">${p.shortDesc}</p>
-                        <div class="mt-3">
-                            <div class="flex items-center gap-2 text-xs text-green-400"><span class="font-bold">⚡ কোর ফিচার:</span></div>
-                            <div class="feature-list mt-2 grid grid-cols-1 gap-1 max-h-32 overflow-y-auto text-xs text-gray-300">
-                                ${p.features.map(f => `<div class="flex items-start gap-1"><span class="text-green-500">▹</span> ${f}</div>`).join('')}
-                            </div>
+                        <h3 class="text-lg font-bold text-white leading-tight">${p.name}</h3>
+                        <p class="text-[11px] text-green-300/70 mt-1">${p.shortDesc}</p>
+                        <div class="mt-3 flex flex-wrap gap-1">
+                            ${p.features.slice(0, 3).map(f => `<span class="bg-green-950 text-green-400 text-[9px] px-2 py-0.5 rounded border border-green-800/40">${f}</span>`).join('')}
                         </div>
-                        <div class="detail-text hidden text-sm text-gray-300 mt-3 pt-2 border-t border-dashed border-green-800/60" id="detail-${idx}">
-                            ${p.detailed}
-                        </div>
-                        <div class="flex justify-between items-center mt-4 gap-3">
-                            <button type="button" onclick="toggleDetail(${idx}, this)" class="toggle-details text-green-400 hover:text-green-300 text-xs font-bold transition min-h-[44px] px-4">📖 বিস্তারিত দেখুন</button>
-                            <button type="button" onclick="showOrderForm('${p.name.replace(/'/g, "\\'")}', '${p.price}')" class="btn-buy px-5 py-2 text-sm font-bold tracking-wider shadow-md pulse-glow">🛒 অর্ডার করুন</button>
+                        <div class="flex justify-between items-center mt-5">
+                            <span class="text-green-400 font-bold font-mono">৳ ${p.price}</span>
+                            <button type="button" onclick="showOrderForm('${p.name}', '${p.price}')" class="btn-buy text-xs">অর্ডার করুন</button>
                         </div>
                     </div>
-                    <div class="absolute top-3 right-3 bg-black/80 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/40 font-mono">৳ ${p.price}</div>
                 </div>
             `).join('');
-            attachSkeletonRemoval();
-            observeCards();
         }
 
-        // show order modal with body scroll lock
-        function showOrderForm(productName, productPrice) {
-            selectedProduct = { name: productName, price: productPrice };
+        function showOrderForm(name, price) {
+            selectedProduct = { name, price };
             document.getElementById('orderModal').classList.remove('hidden');
-            // Prevent background scrolling while modal is open
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Stop background scroll
         }
-        
+
         function hideOrderForm() {
             document.getElementById('orderModal').classList.add('hidden');
-            document.getElementById('custName').value = '';
-            document.getElementById('custPhone').value = '';
-            document.getElementById('custAddr').value = '';
-            // Restore background scrolling
-            document.body.style.overflow = '';
-        }
-
-        function generateOrderMetadata() {
-            const orderId = `#HSB-${Date.now().toString().slice(-6)}${Math.floor(Math.random() * 900 + 100)}`;
-            const now = new Date();
-            const bangladeshTime = now.toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka', hour12: true, dateStyle: 'full', timeStyle: 'short' });
-            return { orderId, bangladeshTime };
+            document.body.style.overflow = ''; // Restore scroll
         }
 
         async function submitToTelegram() {
@@ -454,70 +246,35 @@
             const btn = document.getElementById('submitBtn');
 
             if (!name || !phone || !addr) {
-                showNeonAlert('error', '⚠️ তথ্য ত্রুটি', 'নাম, মোবাইল এবং ঠিকানা পূরণ করুন।');
-                return;
-            }
-            if (!/^(01\d{9})$/.test(phone)) {
-                showNeonAlert('error', '📱 ভুল নম্বর', 'মোবাইল নম্বরটি 11 সংখ্যার হতে হবে (01XXXXXXXXX)');
+                Swal.fire({ icon: 'warning', title: 'তথ্য দিন', background: '#0a0f0a', color: '#ff4141' });
                 return;
             }
 
-            btn.innerText = "📡 প্রেরণ...";
             btn.disabled = true;
+            btn.innerText = "পাঠানো হচ্ছে...";
 
-            const { orderId, bangladeshTime } = generateOrderMetadata();
-            
-            const message = `*🔐 নতুন অর্ডার | ${orderId}*\n━━━━━━━━━━━━━━━━━━━━━\n*📦 পণ্যের নাম:* ${selectedProduct.name}\n*💰 মূল্য:* ${selectedProduct.price} ৳\n*👤 গ্রাহকের নাম:* ${name}\n*📞 ফোন:* ${phone}\n*🏠 ঠিকানা:* ${addr}\n*⏱️ সময়:* ${bangladeshTime} (বাংলাদেশ)\n━━━━━━━━━━━━━━━━━━━━━\n_Sent from HACKSHOPBD Secure Terminal_`;
+            const text = `🛒 *নতুন অর্ডার*\n\n📦 *পণ্য:* ${selectedProduct.name}\n💰 *দাম:* ${selectedProduct.price} ৳\n👤 *নাম:* ${name}\n📞 *ফোন:* ${phone}\n🏠 *ঠিকানা:* ${addr}`;
 
             try {
-                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+                    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })
                 });
-                if (response.ok) {
-                    Swal.fire({
-                        title: '✅ অর্ডার গ্রহণ করা হয়েছে!',
-                        html: `<div class="text-left text-green-300 font-mono"><strong>অর্ডার আইডি:</strong> ${orderId}<br><strong>তারিখ:</strong> ${bangladeshTime}</div><p class="mt-3">আমরা শীঘ্রই যোগাযোগ করব।</p>`,
-                        icon: 'success',
-                        background: '#0a0f0a',
-                        color: '#00ff41',
-                        iconColor: '#00ff41',
-                        confirmButtonColor: '#00cc33',
-                        confirmButtonText: '⛓️ সংরক্ষিত',
-                        customClass: { popup: 'border-2 border-green-500 rounded-3xl' }
-                    });
-                    hideOrderForm();
-                } else {
-                    showNeonAlert('error', '❌ টেলিগ্রাম ত্রুটি', 'সার্ভার সমস্যা, আবার চেষ্টা করুন।');
-                }
-            } catch (err) {
-                showNeonAlert('error', '⚠️ নেটওয়ার্ক সমস্যা', 'ইন্টারনেট সংযোগ যাচাই করুন।');
+                Swal.fire({ icon: 'success', title: 'অর্ডার সফল!', background: '#0a0f0a', color: '#00ff41' });
+                hideOrderForm();
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'ভুল হয়েছে', background: '#0a0f0a' });
             } finally {
-                btn.innerText = "✅ অর্ডার কনফার্ম";
                 btn.disabled = false;
+                btn.innerText = "অর্ডার কনফার্ম";
             }
         }
 
-        // Search event
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            currentFilter = e.target.value;
-            renderProducts();
-        });
-
-        // initial render
+        document.getElementById('searchInput').addEventListener('input', (e) => renderProducts(e.target.value));
+        
+        // Initial Load
         renderProducts();
-
-        // modal responsive fix on resize
-        window.addEventListener('resize', () => {
-            const modalCard = document.getElementById('modalCard');
-            if (window.innerWidth <= 640) modalCard.classList.add('modal-card-full');
-            else modalCard.classList.remove('modal-card-full');
-        });
-        if (window.innerWidth <= 640) document.getElementById('modalCard')?.classList.add('modal-card-full');
-
-        // Override native alert just for safety
-        window.alert = (msg) => showNeonAlert('info', '🔔 বিজ্ঞপ্তি', msg);
     </script>
 </body>
 </html>
